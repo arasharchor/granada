@@ -228,8 +228,6 @@ def process_video(video_name, output_prefix='', seg_length=20, overlap=4):
             # Check if a segment finishs
             if ((i - seg_length) % (seg_length - overlap)) is 0 and i > overlap:
 
-                set_trace()
-
                 # 2, Calculate the covariance matrix of the all the features
                 cov_feature = np.cov(seg_feature)
 
@@ -245,7 +243,7 @@ def process_video(video_name, output_prefix='', seg_length=20, overlap=4):
                 log_feature = log_feature[triu_idx.nonzero()]
 
                 # 4, Save result from step 3
-                output_name = '%s_f_%03d.npy' % (output_prefix, iSeg)
+                output_name = '%s%03d.npy' % (output_prefix, iSeg)
                 np.save(output_name, log_feature)
                 print 'Save result: %s' % (output_name)
 
@@ -306,13 +304,13 @@ def main():
             video_path = path.join(video_dir, video_name)
             feature_path_pre = path.join(feature_dir, video_name)[:-4]
 
-            process_video(video_path, feature_path_pre)
-            # try:
-            #     process_video(video_path, feature_path_pre)
-            # except:
-            #     #TODO: clean up the feature files for unfinished video
-            #     log.writelines(video_path)
-            #     log_write = 1
+            # process_video(video_path, feature_path_pre)
+            try:
+                process_video(video_path, feature_path_pre)
+            except:
+                #TODO: clean up the feature files for unfinished video
+                log.writelines(video_path)
+                log_write = 1
 
     log.close();
     if log_write is not 1:
